@@ -71,10 +71,10 @@ void iterate_set(leveldb::DB* db, unordered_map<string, uint64> &hashes)
     string sValue = key.ToString();
     string data = sKey + sValue;
 
-    const char *buf = data.c_str();
-    size_t len = data.length();
+    auto *buf = data.c_str();
+    auto len = data.length();
 
-    const uint64 h = CityHash64(buf, len);
+    auto h = CityHash64(buf, len);
 
     mtx.lock();
 
