@@ -75,16 +75,17 @@ void iterate_set(leveldb::DB* db, unordered_map<string, uint64> &hashes)
     size_t len = data.length();
 
     const uint64 h = CityHash64(buf, len);
-    auto it = hashes.find(sKey);
 
     mtx.lock();
 
+    auto it = hashes.find(sKey);
+
     if (it != hashes.end()) {
-      // cout << "-" << sKey << endl;
+      // cout << "-" << sKey << " => " << hex << it->second << endl;
       hashes.erase(it);
     }
     else {
-      // cout << "+" << sKey << endl;
+      // cout << "+" << sKey << " => " << hex << h << endl;
       pair<string, uint64> item(sKey, h);
       hashes.insert(item);
     }
