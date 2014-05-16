@@ -1,9 +1,9 @@
 {
-  "name": "ldb",
+  "name": "ldbcmp",
   "version": "0.0.1",
-  "repo": "hij1nx/ldb",
-  "description": "A c++ repl for leveldb",
-  "keywords": [ "leveldb", "repl", "level", "db" ],
+  "repo": "hij1nx/ldbcmp",
+  "description": "A simple CLI tool to compare two leveldb instances",
+  "keywords": [ "leveldb", "rdiff", "level", "db" ],
   "license": "MIT",
   "install": "make install",
   "dependencies": {

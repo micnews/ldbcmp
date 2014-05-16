@@ -2,24 +2,23 @@
 #include <iomanip>
 #include <sstream>
 #include <string>
-#include <vector>
 #include <map>
 #include <thread>
+#include <mutex>
 #include <unordered_map>
-#include <getopt.h>
 
 #include "leveldb/db.h"
 #include "deps/cityhash/src/city.h"
 #include "ldbcmp.h"
 
 static int errors = 0;
+mutex mtx;
 
 void cmp_hash64(uint64 expected, uint64 actual);
 void iterate_set(leveldb::DB* db, unordered_map<string, uint64> &hashes);
 
 int main(int argc, char** argv)
 {
-
   unordered_map<string, uint64> valmap;
 
   string path_a = argv[1];
@@ -47,20 +46,15 @@ int main(int argc, char** argv)
   th1.join();
   th2.join();
 
+  for (auto & item : valmap) {
+    cout << item.first << hex << item.second << endl;
+  }
+
+  cout << valmap.size();
+
   delete db_a;
   delete db_b;
   return 0;
-}
-
-//cmp_hash64(u1, u2);
-
-void cmp_hash64(uint64 expected, uint64 actual)
-{
-  if (expected != actual) 
-  {
-    cerr << "ERROR: expected 0x" << hex << expected << ", but got 0x" << actual << "\n";
-    ++errors;
-  }
 }
 
 void iterate_set(leveldb::DB* db, unordered_map<string, uint64> &hashes)
@@ -81,20 +75,21 @@ void iterate_set(leveldb::DB* db, unordered_map<string, uint64> &hashes)
     size_t len = data.length();
 
     const uint64 h = CityHash64(buf, len);
-
-    // cout << sKey << " -> " << hex << h;
-
-    hashes.emplace(sKey, h);
-
     auto it = hashes.find(sKey);
 
-    cout << it->first << it->second;
-    //if (it != hashes.end() && it->second == h) {
-    //  hashes.erase(it->begin());
-    //}
-    //else {
-    //  hashes.emplate(sKey, h);
-    //}
+    mtx.lock();
+
+    if (it != hashes.end()) {
+      // cout << "-" << sKey << endl;
+      hashes.erase(it);
+    }
+    else {
+      // cout << "+" << sKey << endl;
+      pair<string, uint64> item(sKey, h);
+      hashes.insert(item);
+    }
+
+    mtx.unlock();
   }
   delete itr;
 }
