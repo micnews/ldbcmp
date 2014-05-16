@@ -25,6 +25,6 @@ if the deduplication process has been sucessful if the length of the map is `0`.
 Specify two database paths.
 
 ```
-./ldbcmp ./fixtures/test_a ./fixtures/test_b
+./ldbcmp ./fixtures/same_a ./fixtures/same_b
 ```
 
