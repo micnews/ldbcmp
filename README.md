@@ -1,6 +1,8 @@
 # SYNOPSIS
 Compare two leveldb instances.
 
+[![Build Status](https://magnum.travis-ci.com/PolicyMic/ldbcmp.svg?token=jEessZGjdtQ7bzV5hkxS&branch=master)](https://magnum.travis-ci.com/PolicyMic/ldbcmp)
+
 # DESCRIPTION
 The levelDB iterator reads keys out of the database but never loads the 
 entire database into memory. So essentially we have two streams that can
