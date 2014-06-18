@@ -4,7 +4,13 @@ BIN ?= ldbcmp
 SRC = ldbcmp.cc
 PREFIX ?= /usr/local
 LEVELDBPATH ?= ./deps/leveldb
-CXXFLAGS += -I$(LEVELDBPATH)/include -std=gnu++11 -stdlib=libc++
+CXXFLAGS += -I$(LEVELDBPATH)/include
+
+# Ubuntu uses GNU C.
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+    CXXFLAGS += -std=gnu++11 -stdlib=libc++
+endif
 
 export CXXFLAGS
 all: $(LEVELDBPATH)/libleveldb.a $(BIN)
